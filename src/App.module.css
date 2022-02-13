@@ -1,0 +1,35 @@
+.expensesList {
+  list-style: none;
+  padding: 0;
+}
+.container {
+  text-align: center;
+  margin-left: 200px;
+  width: 70%;
+  margin-top: 20px;
+}
+.container > button {
+  cursor: pointer;
+  padding: 5px 20px;
+  border: 1px solid #40005d;
+  background-color: #40005d;
+  color: white;
+  border-radius: 12px;
+  margin-left: 40px;
+}
+
+.container > input {
+  font: inherit;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 20rem;
+  max-width: 100%;
+}
+
+.container2 {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+
+  font-size: 20px;
+}
