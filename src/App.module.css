@@ -6,13 +6,23 @@
   text-align: center;
   margin-left: 200px;
   width: 70%;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 .container > button {
   cursor: pointer;
   padding: 5px 20px;
   border: 1px solid #40005d;
   background-color: #40005d;
+  color: white;
+  border-radius: 12px;
+  margin-left: 40px;
+  margin-top: 5px;
+}
+.container > div > button {
+  cursor: pointer;
+  padding: 5px 20px;
+  border: 1px solid #18c04a;
+  background-color: #4bd86e;
   color: white;
   border-radius: 12px;
   margin-left: 40px;
@@ -29,7 +39,8 @@
 
 .container2 {
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
-
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  margin-top: 10px;
   font-size: 20px;
+  font-weight: bold;
 }

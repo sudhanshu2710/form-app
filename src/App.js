@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
-import Input from "./component/Input";
-import { TaskList } from "./component/TaskList";
+import ProductInput from "./component/ProductInput";
+import { ProductListItem } from "./component/ProductListItem";
 import style from "./App.module.css";
 
 const DUMMY_Array = [];
 function App() {
   const [todos, setTodos] = useState([]);
   const [random, setRandom] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(4);
   function display() {
-    fetch(`http://localhost:8000/posts`, {
+    console.log(page);
+    fetch(`http://localhost:8000/posts?_page=${page}&_limit=${limit}`, {
       method: "GET",
       headers: { "content-type": "application/json;charset=UTF-8" },
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setTodos([...data]);
         setRandom([...data]);
       })
@@ -22,7 +26,7 @@ function App() {
   //display();
   useEffect(() => {
     display();
-  }, []);
+  }, [page, limit]);
   const removeTask = (id_) => {
     console.log(id_);
     fetch(`http://localhost:8000/posts/${id_}`, {
@@ -35,76 +39,116 @@ function App() {
       })
       .catch((err) => console.log(err));
   };
-  const update = () => {
-    display();
+
+  const handleSubmit = (data_) => {
+    fetch(`http://localhost:8000/posts`, {
+      method: "POST",
+      body: JSON.stringify(data_),
+      headers: { "content-type": "application/json;charset=UTF-8" },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("done");
+        display();
+      })
+      .catch((err) => console.log(err));
   };
   const increase = () => {
-    todos.sort((x, y) => x.salary - y.salary);
+    todos.sort((x, y) => x.cost - y.cost);
     setTodos([...todos]);
   };
   const decrease = () => {
-    todos.sort((x, y) => y.salary - x.salary);
+    todos.sort((x, y) => y.cost - x.cost);
     setTodos([...todos]);
   };
-  const dept1 = () => {
+  const fruit = () => {
     console.log(random);
     const updated = [];
     random.forEach((e) => {
-      if (e.department === "department 1") updated.push(e);
+      if (e.category === "fruits") updated.push(e);
     });
 
     setTodos([...updated]);
   };
-  const dept2 = () => {
+  const veg = () => {
     console.log(random);
     const updated = [];
     random.forEach((e) => {
-      if (e.department === "department 2") updated.push(e);
+      if (e.category === "vegetables") updated.push(e);
     });
     setTodos([...updated]);
   };
-  const dept3 = () => {
+  const provi = () => {
     console.log(random);
     const updated = [];
     random.forEach((e) => {
-      if (e.department === "department 3") updated.push(e);
+      if (e.category === "provisions") updated.push(e);
     });
     setTodos([...updated]);
   };
   const all = () => {
+    setPage(1);
+    setLimit((prev) => {
+      return prev == 100 ? 4 : 100;
+    });
+  };
+  const allInThisPage = () => {
     display();
   };
+  const pageincrease = () => {
+    setPage((prev) => {
+      return prev + 1;
+    });
+  };
+  const pagedecrease = () => {
+    setPage((prev) => {
+      if (prev == 0) return 0;
+      return prev - 1;
+    });
+  };
+
   return (
     <div className={style.container}>
-      <Input update={update} />
+      <ProductInput handleSubmit={handleSubmit} />
       <div className={style.container2}>
-        <div>Name</div>
-        <div>Salary</div>
-        <div>Department</div>
-        <div>Married</div>
+        <div>Title</div>
+        <div>Cost</div>
+        <div>Image</div>
+        <div>Category</div>
       </div>
 
       <ul className={style.expensesList}>
         {todos.map((task) => (
           <li key={task.id}>
-            <TaskList
-              fName={task.fName}
-              Id={task.id}
-              salary={task.salary}
-              department={task.department}
-              isMarried={task.isMarried}
-              age={task.age}
+            <ProductListItem
+              title={task.title}
+              id={task.id}
+              cost={task.cost}
+              category={task.category}
+              image={task.image}
               removeTask={removeTask}
             />
           </li>
         ))}
       </ul>
-      <button onClick={increase}>sort salary increasing</button>
-      <button onClick={decrease}>sort salary decreasing</button>
-      <button onClick={dept1}>dept 1</button>
-      <button onClick={dept2}>dept 2</button>
-      <button onClick={dept3}>dept 3</button>
-      <button onClick={all}>all</button>
+      <div>
+        <button
+          onClick={() => {
+            setPage(1);
+          }}
+        >
+          first page
+        </button>
+        <button onClick={pagedecrease}>previous</button>
+        <button onClick={allInThisPage}>current page</button>
+        <button onClick={pageincrease}>next</button>
+      </div>
+      <button onClick={increase}>cost increasing</button>
+      <button onClick={decrease}>cost decreasing</button>
+      <button onClick={fruit}>fruit</button>
+      <button onClick={veg}>vegetable</button>
+      <button onClick={provi}>provisions</button>
+      <button onClick={all}>pagination/without pagination</button>
     </div>
   );
 }
